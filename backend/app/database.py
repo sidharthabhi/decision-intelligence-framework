@@ -4,13 +4,22 @@ from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.config import settings
 
 
-engine       = create_engine(
-    settings.DATABASE_URL,
-    pool_pre_ping=True,   # auto-reconnect if DB drops
-    pool_size=10,
-    max_overflow=20,
+# Fix for Render/Railway URLs (postgres:// → postgresql://)
+DATABASE_URL = settings.DATABASE_URL.replace("postgres://", "postgresql://")
+
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
 )
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 
 class Base(DeclarativeBase):
@@ -26,12 +35,7 @@ def get_db():
 
 
 def init_db():
-    """
-    Import all models so Base.metadata knows every table,
-    then create any that don't exist yet.
-    Called once at startup via lifespan in main.py.
-    """
-    from app.models import (        # noqa: F401  — side-effect imports
+    from app.models import (
         user,
         business,
         employee,
