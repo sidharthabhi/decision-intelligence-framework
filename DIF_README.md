@@ -2,9 +2,6 @@
 
 A multi-stage validation pipeline that runs records through sequential checks, persists each record's stage state, and surfaces progress in a React frontend — with a machine-learning layer that flags high-risk records.
 
-> ⚠️ **Read this before committing.** This was built as a portfolio project on a generated dataset. The README below is written to be *accurate about that* — it says "tested on a generated dataset of ~179K records," not "production system." Keep it that way. If your code runs stages sequentially (not as separate deployable services), do **not** call it "microservices" — call it a "staged pipeline." Overclaiming architecture is the fastest way to get caught in an interview.
-
----
 
 ## What it does
 
